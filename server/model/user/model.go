@@ -13,6 +13,7 @@ type UserModel struct {
 	Password   string `gorm:"column:password;type:varchar(255)"`
 }
 
+// Gorm hook
 func (user *UserModel) BeforeSave(tx *gorm.DB) (err error) {
 	if !utils.IsHashed(user.Password) {
 		user.Password = utils.MakeHash(user.Password)
