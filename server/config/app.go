@@ -17,7 +17,7 @@ var once sync.Once
 var config *AppConfig
 
 type AppConfig struct {
-	ApiKey   string `json:"api_key"`
+	// ApiKey   string `json:"api_key"`
 	Port     int    `json:"port"`
 	ProxyUrl string `json:"proxy_url"`
 }
@@ -27,7 +27,7 @@ func LoadConfig() *AppConfig {
 		kong.Parse(&CLI)
 
 		config = &AppConfig{
-			ApiKey:   "",
+			// ApiKey:   "",
 			ProxyUrl: "",
 			Port:     8080,
 		}

@@ -2,6 +2,8 @@ package startup
 
 import (
 	"mime"
+	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"sync"
@@ -40,7 +42,15 @@ func startStaticServer() {
 			ctx.Header("Content-Type", mime.TypeByExtension(ext))
 
 		}
-		ctx.File("static/assets" + filename)
+
+		path := "static/assets/" + filename
+
+		_, err := os.Stat(path)
+		if os.IsNotExist(err) {
+			ctx.AbortWithStatus(http.StatusNotFound)
+		}
+
+		ctx.File(path)
 	})
 }
 

@@ -8,6 +8,7 @@ require (
 	github.com/glebarez/sqlite v1.7.0
 	golang.org/x/crypto v0.9.0
 	gorm.io/gorm v1.24.6
+	github.com/sashabaranov/go-openai v1.11.1
 )
 
 require (
