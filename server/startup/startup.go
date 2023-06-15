@@ -46,6 +46,7 @@ func startStaticServer() {
 
 func StartApp() {
 	registerRoutes()
+	setTemplateDir()
 	connectDb()
 	startStaticServer()
 	appConfig := config.LoadConfig()
