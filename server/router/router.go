@@ -7,19 +7,20 @@ import (
 )
 
 var chatController = controller.NewChatController()
-var authController = controller.NewChatController()
+var authController = controller.NewAuthController()
 
 func RegisterRoutes(router *gin.Engine) {
 	router.Use(middlewares.CORSMiddleware())
-	router.GET("/", chatController.Index)
 
-	chat := router.Group("chat")
+	chat := router.Group("chat").Use(middlewares.Jwt())
 	{
 		chat.POST("")
 	}
 
 	auth := router.Group("auth")
 	{
-		auth.POST("")
+		auth.POST("login", authController.Login)
 	}
+
+	router.GET("/", chatController.Index)
 }

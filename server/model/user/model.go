@@ -20,3 +20,13 @@ func (user *UserModel) BeforeSave(tx *gorm.DB) (err error) {
 	}
 	return
 }
+
+func (*UserModel) TableName() string {
+	return "users"
+}
+
+func GetByUsername(userName string) (*UserModel, error) {
+	user := UserModel{}
+	err := model.DB.Table("users").Where("user_name = ?", userName).First(&user).Error
+	return &user, err
+}

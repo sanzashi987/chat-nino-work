@@ -39,7 +39,7 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 
 	client := openai.NewClientWithConfig(gptConfig)
 
-	if _, ok := supportModels[request.Model]; ok {
+	if ok := supportModels[request.Model]; ok {
 		response, err := client.CreateChatCompletion(ctx, request)
 		if err != nil {
 			c.RespondJson(ctx, http.StatusBadRequest, err.Error(), nil)
