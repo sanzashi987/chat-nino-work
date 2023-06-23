@@ -1,4 +1,4 @@
-package startup
+package bootstrap
 
 import (
 	"mime"
@@ -24,8 +24,10 @@ func registerRoutes() {
 	})
 }
 
-func connectDb() {
+func ConnectDb() {
+
 	model.ConnectDB()
+
 }
 
 func setTemplateDir() {
@@ -57,7 +59,6 @@ func startStaticServer() {
 func StartApp() {
 	registerRoutes()
 	setTemplateDir()
-	connectDb()
 	startStaticServer()
 	appConfig := config.LoadConfig()
 	serverPortInString := strconv.Itoa(appConfig.Port)

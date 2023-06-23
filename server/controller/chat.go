@@ -49,6 +49,6 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 			"response": response,
 		})
 	} else {
-		c.RespondJson(ctx, http.StatusBadRequest, "supported model", gin.H{})
+		c.RespondJson(ctx, http.StatusBadRequest, "unsupported model", gin.H{})
 	}
 }

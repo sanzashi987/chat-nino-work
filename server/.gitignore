@@ -20,3 +20,5 @@ storage.json
 /config.json
 
 go.sum
+
+vendor

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/cza14h/chat-nino-work/startup"
+	"github.com/cza14h/chat-nino-work/bootstrap"
 )
 
 func main() {
-	startup.StartApp()
+	bootstrap.StartApp()
 }

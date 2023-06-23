@@ -21,7 +21,7 @@ func (user *UserModel) BeforeSave(tx *gorm.DB) (err error) {
 	return
 }
 
-func (*UserModel) TableName() string {
+func (UserModel) TableName() string {
 	return "users"
 }
 
