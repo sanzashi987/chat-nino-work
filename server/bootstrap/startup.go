@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	"github.com/cza14h/chat-nino-work/config"
-	"github.com/cza14h/chat-nino-work/model"
 	iRouter "github.com/cza14h/chat-nino-work/router"
 	"github.com/gin-gonic/gin"
 )
@@ -22,12 +21,6 @@ func registerRoutes() {
 		router = gin.Default()
 		iRouter.RegisterRoutes(router)
 	})
-}
-
-func ConnectDb() {
-
-	model.ConnectDB()
-
 }
 
 func setTemplateDir() {

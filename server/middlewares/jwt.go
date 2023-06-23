@@ -15,7 +15,7 @@ func Jwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		claims, err := auth.ParseToken(c)
 		if err != nil {
-			base.RespondJson(c, http.StatusUnauthorized, err.Error(), nil)
+			base.AbortJson(c, http.StatusUnauthorized, err.Error(), nil)
 		}
 		c.Set(config.JwtContextKey, claims)
 		c.Next()

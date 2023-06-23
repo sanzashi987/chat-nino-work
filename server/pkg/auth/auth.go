@@ -18,7 +18,7 @@ type AuthClaims struct {
 
 func GenerateTokenByUserName(userName string) (string, error) {
 	now := time.Now()
-	expires := now.Add(72 * time.Hour)
+	expires := now.Add(config.JwtCookieExpiry)
 	issuer := "chat.nino.work"
 
 	claims := AuthClaims{
