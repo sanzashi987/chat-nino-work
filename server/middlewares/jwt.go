@@ -17,7 +17,9 @@ func Jwt() gin.HandlerFunc {
 		if err != nil {
 			base.AbortJson(c, http.StatusUnauthorized, err.Error(), nil)
 		}
-		c.Set(config.JwtContextKey, claims)
+
+		c.Set(config.JwtTokenContextKey, claims)
+		c.Set(config.JwtUserIDContextKey, claims.UserID)
 		c.Next()
 	}
 }

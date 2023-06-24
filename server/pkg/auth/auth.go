@@ -11,18 +11,19 @@ import (
 var signer = []byte("chat.nino.work")
 
 type AuthClaims struct {
-	ID       int
+	UserID   uint
 	Username string
 	jwt.RegisteredClaims
 }
 
-func GenerateTokenByUserName(userName string) (string, error) {
+func GenerateToken(userName string, userId uint) (string, error) {
 	now := time.Now()
 	expires := now.Add(config.JwtCookieExpiry)
 	issuer := "chat.nino.work"
 
 	claims := AuthClaims{
 		Username: userName,
+		UserID:   userId,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expires),
 			Issuer:    issuer,

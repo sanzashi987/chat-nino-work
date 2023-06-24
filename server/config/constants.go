@@ -3,5 +3,6 @@ package config
 import "time"
 
 var JwtTokenHeader = "authentication"
-var JwtContextKey = "jwt_token"
+var JwtTokenContextKey = "jwt_token"
+var JwtUserIDContextKey = "jwt_user_id"
 var JwtCookieExpiry = 72 * time.Hour

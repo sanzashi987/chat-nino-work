@@ -5,6 +5,11 @@ import "github.com/gin-gonic/gin"
 type BaseController struct {
 }
 
+type BasePageSize struct {
+	PageIndex int `json:"page_index"`
+	PageSize  int `json:"page_size"`
+}
+
 func (*BaseController) RespondJson(c *gin.Context, code int, errMsg string, data interface{}) {
 	c.JSON(code, gin.H{
 		"code":   code,
@@ -19,4 +24,5 @@ func (*BaseController) AbortJson(c *gin.Context, code int, errMsg string, data i
 		"errMsg": errMsg,
 		"data":   data,
 	})
+	panic(errMsg)
 }

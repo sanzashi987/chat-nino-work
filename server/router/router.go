@@ -8,19 +8,30 @@ import (
 
 var chatController = controller.NewChatController()
 var authController = controller.NewAuthController()
+var loginController = controller.NewLoginController()
 
 func RegisterRoutes(router *gin.Engine) {
-	router.Use(middlewares.CORSMiddleware())
+	router.Use(middlewares.Recover()).Use(middlewares.CORSMiddleware())
 
+	// frontend files
+	router.GET("/", chatController.Index)
+
+	// public apis
+	login := router.Group("login")
+	{
+		login.POST("/login", loginController.Login)
+	}
+
+	// auth required apis
 	chat := router.Group("chat").Use(middlewares.Jwt())
 	{
 		chat.POST("")
 	}
 
-	auth := router.Group("auth")
+	auth := router.Group("user").Use(middlewares.Jwt())
 	{
-		auth.POST("login", authController.Login)
+		auth.POST("/info", authController.Info)
+
 	}
 
-	router.GET("/", chatController.Index)
 }

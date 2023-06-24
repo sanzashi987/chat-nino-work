@@ -9,10 +9,11 @@ import (
 
 type UserModel struct {
 	model.BaseModel
-	UserConfig string                   `gorm:"column:user_config;type:varchar(255)"`
-	UserName   string                   `gorm:"column:user_name;type:varchar(255);unique"`
-	Password   string                   `gorm:"column:password;type:varchar(255)"`
-	Dialogs    []completion.DialogModel `gorm:"foreignKey:UserID"`
+	UserConfig   string                   `gorm:"column:user_config;type:varchar(255)"`
+	Username     string                   `gorm:"column:username;type:varchar(255);unique"`
+	Password     string                   `gorm:"column:password;type:varchar(255)"`
+	Dialogs      []completion.DialogModel `gorm:"foreignKey:UserID"`
+	DialogCounts int                      `gorm:"column:dialog_counts;type:int"`
 }
 
 // Gorm hook
@@ -27,10 +28,16 @@ func (user *UserModel) BeforeSave(tx *gorm.DB) (err error) {
 // 	return "users"
 // }
 
-func GetByUsername(userName string) (*UserModel, error) {
+func GetByUsername(username string) (*UserModel, error) {
 	user := UserModel{}
-	err := model.DBRef.Where("user_name = ?", userName).First(&user).Error
+	err := model.DBRef.Where("username = ?", username).First(&user).Error
 	return &user, err
+}
+
+func GetByUserID(userId uint) (user *UserModel, err error) {
+	user = &UserModel{}
+	err = model.DBRef.Where("ID = ?", userId).First(user).Error
+	return user, err
 }
 
 func (user *UserModel) ComparPassword(_password string) bool {

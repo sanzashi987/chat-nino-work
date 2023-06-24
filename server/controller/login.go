@@ -1,22 +1,22 @@
 package controller
 
 import (
-	"net/http"
-
 	"github.com/cza14h/chat-nino-work/config"
 	"github.com/cza14h/chat-nino-work/model/user"
-	authPkg "github.com/cza14h/chat-nino-work/pkg/auth"
-
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+
+	"net/http"
+
+	authPkg "github.com/cza14h/chat-nino-work/pkg/auth"
+	"github.com/gin-gonic/gin"
 )
 
-type AuthController struct {
+type LoginController struct {
 	BaseController
 }
 
-func NewAuthController() *AuthController {
-	return &AuthController{}
+func NewLoginController() *LoginController {
+	return &LoginController{}
 }
 
 type LoginPayload struct {
@@ -24,7 +24,7 @@ type LoginPayload struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (auth *AuthController) Login(ctx *gin.Context) {
+func (auth *LoginController) Login(ctx *gin.Context) {
 	var loginPayload = LoginPayload{}
 	err := ctx.BindJSON(&loginPayload)
 	if err != nil {
@@ -40,12 +40,12 @@ func (auth *AuthController) Login(ctx *gin.Context) {
 		auth.AbortJson(ctx, http.StatusUnauthorized, "Password not match", nil)
 	}
 
-	token, err := authPkg.GenerateTokenByUserName(loginPayload.Username)
+	token, err := authPkg.GenerateToken(user.Username, uint(user.ID))
 	if err != nil {
 		auth.AbortJson(ctx, http.StatusInternalServerError, "Fail to generate login token", nil)
 	}
 
 	ctx.SetCookie(config.JwtTokenHeader, token, int(config.JwtCookieExpiry.Seconds()), "/", "*", false, true)
 
-	ctx.Redirect(http.StatusFound, "/chat")
+	ctx.Redirect(http.StatusFound, "/")
 }
