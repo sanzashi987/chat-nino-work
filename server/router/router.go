@@ -11,7 +11,7 @@ var authController = controller.NewAuthController()
 var loginController = controller.NewLoginController()
 
 func RegisterRoutes(router *gin.Engine) {
-	router.Use(middlewares.Recover()).Use(middlewares.CORSMiddleware())
+	router.Use(middlewares.CORSMiddleware())
 
 	// frontend files
 	router.GET("/", chatController.Index)

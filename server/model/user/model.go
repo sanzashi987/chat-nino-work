@@ -9,11 +9,10 @@ import (
 
 type UserModel struct {
 	model.BaseModel
-	UserConfig   string                   `gorm:"column:user_config;type:varchar(255)"`
-	Username     string                   `gorm:"column:username;type:varchar(255);unique"`
-	Password     string                   `gorm:"column:password;type:varchar(255)"`
-	Dialogs      []completion.DialogModel `gorm:"foreignKey:UserID"`
-	DialogCounts int                      `gorm:"column:dialog_counts;type:int"`
+	UserConfig string                   `gorm:"column:user_config;type:varchar(255)"`
+	Username   string                   `gorm:"column:username;type:varchar(255);unique"`
+	Password   string                   `gorm:"column:password;type:varchar(255)"`
+	Dialogs    []completion.DialogModel `gorm:"foreignKey:UserID"`
 }
 
 // Gorm hook
