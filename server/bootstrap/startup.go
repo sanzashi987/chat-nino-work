@@ -50,11 +50,11 @@ func startStaticServer() {
 }
 
 func StartApp() {
+	config.CreateSnowflakeNode()
 	registerRoutes()
 	setTemplateDir()
 	startStaticServer()
 	appConfig := config.LoadConfig()
 	serverPortInString := strconv.Itoa(appConfig.Port)
 	router.Run(":" + serverPortInString)
-
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"github.com/cza14h/chat-nino-work/consts"
 	"github.com/gin-gonic/gin"
 	openai "github.com/sashabaranov/go-openai"
 )
@@ -22,15 +23,6 @@ func (c *ChatController) Index(ctx *gin.Context) {
 
 }
 
-var supportModels = map[string]bool{
-	openai.GPT4:              true,
-	openai.GPT40314:          true,
-	openai.GPT432K:           true,
-	openai.GPT432K0314:       true,
-	openai.GPT3Dot5Turbo0301: true,
-	openai.GPT3Dot5Turbo:     true,
-}
-
 func (c *ChatController) Completion(ctx *gin.Context) {
 	var request openai.ChatCompletionRequest
 	ctx.BindJSON(&request)
@@ -39,7 +31,7 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 
 	client := openai.NewClientWithConfig(gptConfig)
 
-	if ok := supportModels[request.Model]; ok {
+	if ok := consts.SupportModels[request.Model]; ok {
 		response, err := client.CreateChatCompletion(ctx, request)
 		if err != nil {
 			c.AbortJson(ctx, http.StatusBadRequest, err.Error(), nil)

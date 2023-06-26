@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/cza14h/chat-nino-work/config"
+	"github.com/cza14h/chat-nino-work/consts"
 	"github.com/cza14h/chat-nino-work/model/user"
 	"gorm.io/gorm"
 
@@ -31,7 +31,7 @@ func (auth *LoginController) Login(ctx *gin.Context) {
 		auth.AbortJson(ctx, http.StatusBadRequest, "Invalid login parameters", nil)
 	}
 
-	user, err := user.GetByUsername(loginPayload.Username)
+	user, err := user.ReadByUsername(loginPayload.Username)
 	if err != nil && err == gorm.ErrRecordNotFound {
 		auth.AbortJson(ctx, http.StatusUnauthorized, "User not found", nil)
 	}
@@ -45,7 +45,7 @@ func (auth *LoginController) Login(ctx *gin.Context) {
 		auth.AbortJson(ctx, http.StatusInternalServerError, "Fail to generate login token", nil)
 	}
 
-	ctx.SetCookie(config.JwtTokenHeader, token, int(config.JwtCookieExpiry.Seconds()), "/", "*", false, true)
+	ctx.SetCookie(consts.JwtTokenHeader, token, int(consts.JwtCookieExpiry.Seconds()), "/", "*", false, true)
 
 	ctx.Redirect(http.StatusFound, "/")
 }

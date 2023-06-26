@@ -8,8 +8,8 @@ import (
 )
 
 type BaseModel struct {
-	ID        uint64    `gorm:"column:id;primaryKey;autoIncrement;not null;index"`
-	CreatedAt time.Time `gorm:"column:created_at;index"`
+	ID        uint64    `gorm:"column:id;primaryKey;not null;index"`
+	CreatedAt time.Time `gorm:"column:created_at;"`
 	UpdatedAt time.Time `gorm:"column:updated_at;index"`
 }
 
@@ -29,4 +29,14 @@ var DBRef *gorm.DB
 
 func SetupDB(db *gorm.DB) {
 	DBRef = db
+}
+
+type ChatConfig struct {
+	Model             string  `json:"model"`
+	Temperature       float32 `json:"temperature"`
+	MaxTokens         int     `json:"max_tokens"`
+	PresencePenalty   float32 `json:"presence_penalty"`
+	HistoryCount      int     `json:"history_count"`
+	CompressThreshold int     `json:"compress_threshold"`
+	Memory            bool    `json:"memory"`
 }

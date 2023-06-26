@@ -3,42 +3,28 @@ package user
 import (
 	"github.com/cza14h/chat-nino-work/model"
 	"github.com/cza14h/chat-nino-work/model/completion"
-	"github.com/cza14h/chat-nino-work/utils"
-	"gorm.io/gorm"
 )
 
 type UserModel struct {
 	model.BaseModel
-	UserConfig string                   `gorm:"column:user_config;type:varchar(255)"`
-	Username   string                   `gorm:"column:username;type:varchar(255);unique"`
-	Password   string                   `gorm:"column:password;type:varchar(255)"`
-	Dialogs    []completion.DialogModel `gorm:"foreignKey:UserID"`
+	PreferenceConfig string                   `gorm:"column:preference_config;type:varchar(255)"`
+	ChatConfig       string                   `gorm:"column:chat_config;type:varchar(255)"`
+	Username         string                   `gorm:"column:username;type:varchar(255);unique"`
+	Password         string                   `gorm:"column:password;type:varchar(255)"`
+	Dialogs          []completion.DialogModel `gorm:"foreignKey:UserID"`
 }
 
-// Gorm hook
-func (user *UserModel) BeforeSave(tx *gorm.DB) (err error) {
-	if !utils.IsHashed(user.Password) {
-		user.Password = utils.MakeHash(user.Password)
-	}
-	return
+type UserConfig struct {
+	Preference UserPreference   `json:"preference"`
+	Chat       model.ChatConfig `json:"chat"`
 }
 
-// func (UserModel) TableName() string {
-// 	return "users"
-// }
-
-func GetByUsername(username string) (*UserModel, error) {
-	user := UserModel{}
-	err := model.DBRef.Where("username = ?", username).First(&user).Error
-	return &user, err
-}
-
-func GetByUserID(userId uint) (user *UserModel, err error) {
-	user = &UserModel{}
-	err = model.DBRef.Where("ID = ?", userId).First(user).Error
-	return user, err
-}
-
-func (user *UserModel) ComparPassword(_password string) bool {
-	return utils.CheckHash(_password, user.Password)
+type UserPreference struct {
+	Avatar           string `json:"avatar"`
+	SendKey          string `json:"send_key"`
+	Theme            string `json:"theme"`
+	Language         string `json:"language"`
+	FontSize         string `json:"font_size"`
+	SendPreviewubble bool   `json:"send_preview_bubble"`
+	Mask             bool   `json:"mask"`
 }

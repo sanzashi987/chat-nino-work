@@ -3,7 +3,7 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/cza14h/chat-nino-work/config"
+	"github.com/cza14h/chat-nino-work/consts"
 	"github.com/cza14h/chat-nino-work/controller"
 	"github.com/cza14h/chat-nino-work/pkg/auth"
 	"github.com/gin-gonic/gin"
@@ -18,8 +18,8 @@ func Jwt() gin.HandlerFunc {
 			base.AbortJson(c, http.StatusUnauthorized, err.Error(), nil)
 		}
 
-		c.Set(config.JwtTokenContextKey, claims)
-		c.Set(config.JwtUserIDContextKey, claims.UserID)
+		c.Set(consts.JwtTokenContextKey, claims)
+		c.Set(consts.JwtUserIDContextKey, claims.UserID)
 		c.Next()
 	}
 }

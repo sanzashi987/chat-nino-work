@@ -5,7 +5,7 @@ import "github.com/gin-gonic/gin"
 type BaseController struct {
 }
 
-type BasePageSize struct {
+type BasePageSizePayload struct {
 	PageIndex int `json:"page_index"`
 	PageSize  int `json:"page_size"`
 }
