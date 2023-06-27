@@ -10,6 +10,7 @@ type DialogModel struct {
 	UserID       uint64         `gorm:"index"`
 	Messages     []MessageModal `gorm:"foreignKey:DialogID"`
 	IsDeleted    bool           `gorm:"index;default:false"`
+	MessageCount int            `gorm:"column:message_count"`
 }
 
 type MessageModal struct {

@@ -12,6 +12,7 @@ type UserModel struct {
 	Username         string                   `gorm:"column:username;type:varchar(255);unique"`
 	Password         string                   `gorm:"column:password;type:varchar(255)"`
 	Dialogs          []completion.DialogModel `gorm:"foreignKey:UserID"`
+	DialogCount      int                      `gorm:"column:dialog_count"`
 }
 
 type UserConfig struct {

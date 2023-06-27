@@ -35,13 +35,37 @@ func (auth *AuthController) Info(ctx *gin.Context) {
 }
 
 type QueryMessagesPayload struct {
-	DialogID uint `json:"dialog_id"`
+	BasePageSizePayload
+	DialogID uint `json:"dialog_id" binding:"required"`
 }
 
 func (auth *AuthController) Messages(ctx *gin.Context) {
+	var query = QueryMessagesPayload{
+		BasePageSizePayload: BasePageSizePayload{
+			PageIndex: 0,
+			PageSize:  10,
+		},
+	}
+	ctx.BindJSON(&query)
 	userId := mustGetUserID(ctx, auth)
 
-	messages, _ := completion.ReadPagingMessagsByDialogID()
+	legal, dialog := completion.IsDialogBelongsToUser(userId, query.DialogID)
+	if !legal {
+		auth.AbortJson(ctx, http.StatusBadRequest, "dialog not belongs to the user", nil)
+	}
+
+	messages := completion.ReadPagingMessagsByDialogID(
+		query.DialogID,
+		query.PageSize,
+		query.PageIndex,
+	)
+
+	auth.RespondJson(ctx, http.StatusOK, "", gin.H{
+		"messages":     messages,
+		"pageIndex":    query.PageIndex,
+		"pageSize":     query.PageSize,
+		"messageCount": dialog.MessageCount,
+	})
 
 }
 
