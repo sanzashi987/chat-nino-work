@@ -3,7 +3,7 @@ package auth
 import (
 	"time"
 
-	"github.com/cza14h/chat-nino-work/config"
+	"github.com/cza14h/chat-nino-work/consts"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -18,7 +18,7 @@ type AuthClaims struct {
 
 func GenerateToken(userName string, userId uint) (string, error) {
 	now := time.Now()
-	expires := now.Add(config.JwtCookieExpiry)
+	expires := now.Add(consts.JwtCookieExpiry)
 	issuer := "chat.nino.work"
 
 	claims := AuthClaims{
@@ -34,7 +34,7 @@ func GenerateToken(userName string, userId uint) (string, error) {
 }
 
 func ParseToken(c *gin.Context) (*AuthClaims, error) {
-	token, err := c.Cookie(config.JwtTokenHeader)
+	token, err := c.Cookie(consts.JwtTokenHeader)
 
 	if err != nil {
 		return nil, err

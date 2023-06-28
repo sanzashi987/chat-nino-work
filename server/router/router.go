@@ -25,13 +25,17 @@ func RegisterRoutes(router *gin.Engine) {
 	// auth required apis
 	chat := router.Group("chat").Use(middlewares.Jwt())
 	{
-		chat.POST("")
+		chat.POST("/")
 	}
 
 	auth := router.Group("user").Use(middlewares.Jwt())
 	{
-		auth.POST("/info", authController.Info)
+		auth.POST("/info", authController.GetUserInfo)
+	}
 
+	test := router.Group("test")
+	{
+		test.POST("/test", authController.Test)
 	}
 
 }

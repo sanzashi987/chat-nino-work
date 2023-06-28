@@ -35,11 +35,13 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 		response, err := client.CreateChatCompletion(ctx, request)
 		if err != nil {
 			c.AbortJson(ctx, http.StatusBadRequest, err.Error(), nil)
+			return
 		}
 		c.RespondJson(ctx, http.StatusOK, "", gin.H{
 			"response": response,
 		})
 	} else {
 		c.AbortJson(ctx, http.StatusBadRequest, "unsupported model", gin.H{})
+		return
 	}
 }

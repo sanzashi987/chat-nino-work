@@ -24,5 +24,5 @@ func (*BaseController) AbortJson(c *gin.Context, code int, errMsg string, data i
 		"errMsg": errMsg,
 		"data":   data,
 	})
-	panic(errMsg)
+	// panic(errMsg)
 }

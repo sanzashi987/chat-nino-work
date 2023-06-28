@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/cza14h/chat-nino-work/consts"
 	"github.com/cza14h/chat-nino-work/model/completion"
-	"github.com/cza14h/chat-nino-work/model/user"
+	"github.com/cza14h/chat-nino-work/services"
+	"github.com/cza14h/chat-nino-work/services/dto"
 
 	// authPkg "github.com/cza14h/chat-nino-work/pkg/auth"
 
@@ -24,13 +26,44 @@ func mustGetUserID(ctx *gin.Context, auth *AuthController) uint {
 	userId, ok := ctx.MustGet(consts.JwtUserIDContextKey).(uint)
 	if !ok {
 		auth.AbortJson(ctx, http.StatusInternalServerError, "Fail to get token from context", nil)
+		panic("Fail to get token from context")
 	}
 	return userId
 }
 
-func (auth *AuthController) Info(ctx *gin.Context) {
+func (auth *AuthController) GetUserInfo(ctx *gin.Context) {
+	requestUserInfo := dto.RequestDialogsDto{}
 	userId := mustGetUserID(ctx, auth)
-	userModel, _ := user.ReadByUserID(userId)
+	ctx.BindJSON(&requestUserInfo)
+
+	resDto, err := services.GetUserInfo(userId, &requestUserInfo)
+
+	if err != nil {
+		auth.AbortJson(ctx, http.StatusInternalServerError,
+			fmt.Sprintf("fail to fetch user, err: %s", err.Error()), nil)
+		return
+	}
+
+	auth.RespondJson(ctx, http.StatusOK, "", &resDto)
+
+}
+
+func (auth *AuthController) Test(ctx *gin.Context) {
+	requestUserInfo := dto.RequestDialogsDto{}
+
+	if err := ctx.BindJSON(&requestUserInfo); err != nil {
+		auth.AbortJson(ctx, 400, "", nil)
+		return
+	}
+
+	fmt.Println(requestUserInfo)
+	resDto := dto.ResponseUserInfoDto{
+		UpdateUserConfigDto: dto.UpdateUserConfigDto{
+			PreferenceConfig: "233",
+		},
+	}
+
+	auth.RespondJson(ctx, http.StatusOK, "", &resDto)
 
 }
 
@@ -52,9 +85,10 @@ func (auth *AuthController) Messages(ctx *gin.Context) {
 	legal, dialog := completion.IsDialogBelongsToUser(userId, query.DialogID)
 	if !legal {
 		auth.AbortJson(ctx, http.StatusBadRequest, "dialog not belongs to the user", nil)
+		return
 	}
 
-	messages := completion.ReadPagingMessagsByDialogID(
+	messages, _ := completion.ReadPagingMessagsByDialogID(
 		query.DialogID,
 		query.PageSize,
 		query.PageIndex,
@@ -74,7 +108,7 @@ type QueryPagingDialogs struct {
 }
 
 func (auth *AuthController) PagingDialogs(ctx *gin.Context) {
-	userId := mustGetUserID(ctx, auth)
+	// userId := mustGetUserID(ctx, auth)
 
 }
 

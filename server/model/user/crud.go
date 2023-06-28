@@ -2,9 +2,19 @@ package user
 
 import (
 	"github.com/cza14h/chat-nino-work/model"
+	"github.com/cza14h/chat-nino-work/services/dto"
 	"github.com/cza14h/chat-nino-work/utils"
 	"gorm.io/gorm"
 )
+
+func UpdateUserConfig(userId uint, payload *dto.UpdateUserConfigDto) (err error) {
+	updateUser := UserModel{
+		PreferenceConfig: payload.PreferenceConfig,
+		ChatConfig:       payload.PreferenceConfig,
+	}
+	err = model.DBRef.Where("id = ? ", userId).Updates(&updateUser).Error
+	return
+}
 
 func ReadByUsername(username string) (user *UserModel, err error) {
 	user = &UserModel{}
