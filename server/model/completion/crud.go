@@ -25,7 +25,7 @@ func ReadPagingDialogsByUserID(userId uint, pageIndex int, pageSize int) (dialog
 	return
 }
 
-func ReadPagingMessagsByDialogID(dialogId uint, pageIndex int, pageSize int) (messages *[]MessageModal, err error) {
+func ReadPagingMessagsByDialogID(dialogId uint, pageIndex int, pageSize int) (messages *[]MessageModel, err error) {
 	err = model.DBRef.Where("dialog_id = ? AND is_deleted = ?", dialogId, false).Offset(pageIndex * pageSize).Limit(pageSize).Find(messages).Error
 	return
 }

@@ -16,24 +16,28 @@ func RegisterRoutes(router *gin.Engine) {
 	// frontend files
 	router.GET("/", chatController.Index)
 
+	// version
+
+	v1 := router.Group("V1")
+
 	// public apis
-	login := router.Group("login")
+	login := v1.Group("login")
 	{
 		login.POST("/login", loginController.Login)
 	}
 
 	// auth required apis
-	chat := router.Group("chat").Use(middlewares.Jwt())
+	chat := v1.Group("chat").Use(middlewares.Jwt())
 	{
 		chat.POST("/")
 	}
 
-	auth := router.Group("user").Use(middlewares.Jwt())
+	auth := v1.Group("user").Use(middlewares.Jwt())
 	{
 		auth.POST("/info", authController.GetUserInfo)
 	}
 
-	test := router.Group("test")
+	test := v1.Group("test")
 	{
 		test.POST("/test", authController.Test)
 	}

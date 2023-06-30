@@ -15,6 +15,10 @@ type UserModel struct {
 	DialogCount      int                      `gorm:"column:dialog_count"`
 }
 
+func (u UserModel) TableName() string {
+	return "users"
+}
+
 type UserConfig struct {
 	Preference UserPreference   `json:"preference"`
 	Chat       model.ChatConfig `json:"chat"`

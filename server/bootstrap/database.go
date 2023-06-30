@@ -12,13 +12,11 @@ import (
 	"gorm.io/sharding"
 )
 
-func SetupDB() {
+func setupDB() {
 
 	db, err := gorm.Open(sqlite.Open("chat-nino-work.db"), &gorm.Config{
 		Logger: glogger.Default.LogMode(glogger.Info),
 	})
-
-	model.SetupDB(db)
 
 	if err != nil {
 		panic("failed to connect database")
@@ -30,7 +28,7 @@ func SetupDB() {
 }
 
 func migrate(db *gorm.DB) {
-	err := db.AutoMigrate(&user.UserModel{}, &completion.MessageModal{})
+	err := db.AutoMigrate(&user.UserModel{}, &completion.MessageModel{}, &completion.DialogModel{})
 	if err != nil {
 		fmt.Printf("error from database migrate: %f", err.Error())
 	}
@@ -40,8 +38,8 @@ func shard(db *gorm.DB) {
 	db.Use(sharding.Register(
 		sharding.Config{
 			ShardingKey:         "id",
-			NumberOfShards:      256,
+			NumberOfShards:      64,
 			PrimaryKeyGenerator: sharding.PKSnowflake,
-		}, completion.MessageModal{},
+		}, completion.MessageModel{},
 	))
 }

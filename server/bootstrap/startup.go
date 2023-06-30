@@ -51,6 +51,7 @@ func startStaticServer() {
 
 func StartApp() {
 	config.CreateSnowflakeNode()
+	setupDB()
 	registerRoutes()
 	setTemplateDir()
 	startStaticServer()
