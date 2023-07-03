@@ -29,7 +29,7 @@ func RegisterRoutes(router *gin.Engine) {
 	// auth required apis
 	chat := v1.Group("chat").Use(middlewares.Jwt())
 	{
-		chat.POST("/")
+		chat.POST("/completion", chatController.Completion)
 	}
 
 	auth := v1.Group("user").Use(middlewares.Jwt())

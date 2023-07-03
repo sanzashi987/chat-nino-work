@@ -27,6 +27,10 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 	var request openai.ChatCompletionRequest
 	ctx.BindJSON(&request)
 
+	// force not stream
+
+	request.Stream = false
+
 	gptConfig := openai.DefaultConfig("")
 
 	client := openai.NewClientWithConfig(gptConfig)
@@ -41,7 +45,7 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 			"response": response,
 		})
 	} else {
-		c.AbortJson(ctx, http.StatusBadRequest, "unsupported model", gin.H{})
+		c.AbortJson(ctx, http.StatusBadRequest, "unsupported model", nil)
 		return
 	}
 }
