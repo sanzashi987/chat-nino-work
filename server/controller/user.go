@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/cza14h/chat-nino-work/consts"
+	"github.com/cza14h/chat-nino-work/dto"
 	"github.com/cza14h/chat-nino-work/model/completion"
 	"github.com/cza14h/chat-nino-work/services"
-	"github.com/cza14h/chat-nino-work/services/dto"
 
 	// authPkg "github.com/cza14h/chat-nino-work/pkg/auth"
 
@@ -67,54 +67,40 @@ func (auth *AuthController) Test(ctx *gin.Context) {
 
 }
 
-type QueryMessagesPayload struct {
-	BasePageSizePayload
-	DialogID uint `json:"dialog_id" binding:"required"`
-}
-
 func (auth *AuthController) Messages(ctx *gin.Context) {
-	var query = QueryMessagesPayload{
-		BasePageSizePayload: BasePageSizePayload{
-			PageIndex: 0,
+	var requestBody = dto.RequestMessagesDto{
+		RequestPagingDto: dto.RequestPagingDto{
 			PageSize:  10,
-		},
+			PageIndex: 0,
+		}, // default pagination config
 	}
-	ctx.BindJSON(&query)
+	ctx.BindJSON(&requestBody)
 	userId := mustGetUserID(ctx, auth)
 
-	legal, dialog := completion.IsDialogBelongsToUser(userId, query.DialogID)
+	legal, dialog := completion.IsDialogBelongsToUser(userId, requestBody.DialogID)
 	if !legal {
 		auth.AbortJson(ctx, http.StatusBadRequest, "dialog not belongs to the user", nil)
 		return
 	}
 
 	messages, _ := completion.ReadPagingMessagsByDialogID(
-		query.DialogID,
-		query.PageSize,
-		query.PageIndex,
+		requestBody.DialogID,
+		requestBody.PageSize,
+		requestBody.PageIndex,
 	)
 
 	auth.RespondJson(ctx, http.StatusOK, "", gin.H{
 		"messages":     messages,
-		"pageIndex":    query.PageIndex,
-		"pageSize":     query.PageSize,
+		"pageIndex":    requestBody.PageIndex,
+		"pageSize":     requestBody.PageSize,
 		"messageCount": dialog.MessageCount,
 	})
 
 }
 
-type QueryPagingDialogs struct {
-	BasePageSizePayload
-}
-
 func (auth *AuthController) PagingDialogs(ctx *gin.Context) {
 	// userId := mustGetUserID(ctx, auth)
 
-}
-
-type QueryPagingMessages struct {
-	QueryMessagesPayload
-	BasePageSizePayload
 }
 
 func (auth *AuthController) PagingMessages(ctx *gin.Context) {

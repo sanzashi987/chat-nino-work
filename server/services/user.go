@@ -2,7 +2,7 @@ package services
 
 import (
 	// "github.com/cza14h/chat-nino-work/model/user"
-	"github.com/cza14h/chat-nino-work/services/dto"
+	"github.com/cza14h/chat-nino-work/dto"
 )
 
 func GetUserInfo(userId uint, payload *dto.RequestDialogsDto) (res dto.ResponseUserInfoDto, err error) {

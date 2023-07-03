@@ -1,8 +1,8 @@
 package user
 
 import (
+	"github.com/cza14h/chat-nino-work/dto"
 	"github.com/cza14h/chat-nino-work/model"
-	"github.com/cza14h/chat-nino-work/services/dto"
 	"github.com/cza14h/chat-nino-work/utils"
 	"gorm.io/gorm"
 )
