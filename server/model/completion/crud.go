@@ -1,20 +1,14 @@
 package completion
 
 import (
-	"time"
-
-	"github.com/cza14h/chat-nino-work/config"
 	"github.com/cza14h/chat-nino-work/model"
 )
 
 func CreateDialogFromConfig(userId uint64) {
 
 	var dialog = DialogModel{
-		BaseModel: model.BaseModel{
-			ID:        uint64(config.SnowflakeNode.Generate()),
-			CreatedAt: time.Now(),
-		},
-		UserID: userId,
+		BaseModel: *model.CreateBaseModel(),
+		UserID:    userId,
 	}
 
 	model.DBRef.Create(&dialog)
@@ -36,8 +30,27 @@ func IsDialogBelongsToUser(userId uint, dialogId uint) (bool, *DialogModel) {
 	return dialog.UserID == uint64(userId), &dialog
 }
 
-func DeleteDialog(dialogId uint, err error) {
+func DeleteDialog(dialogId uint) (err error) {
 	dialog := DialogModel{}
 	err = model.DBRef.First(&dialog, dialogId).Update("is_deleted", true).Error
 	return
+}
+
+func CreateMessagePair(replayContent, userContent string, dialogID uint64) (uint64, uint64, error) {
+	var userMessage = MessageModel{
+		BaseModel: *model.CreateBaseModel(),
+		DialogID:  dialogID,
+		Content:   userContent,
+	}
+	var assistantMessage = MessageModel{
+		BaseModel: *model.CreateBaseModel(),
+		ReplyTo:   userMessage.ID,
+		DialogID:  dialogID,
+		Content:   replayContent,
+	}
+
+	records := []*MessageModel{&userMessage, &assistantMessage}
+
+	err := model.DBRef.Create(records).Error
+	return userMessage.ID, assistantMessage.ID, err
 }

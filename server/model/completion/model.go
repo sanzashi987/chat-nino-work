@@ -19,16 +19,17 @@ func (u DialogModel) TableName() string {
 
 type MessageModel struct {
 	model.BaseModel
-	DialogID  uint64 `gorm:"index"`
+	Content  string `gorm:"column:content;type:varchar(255)"`
+	DialogID uint64 `gorm:"index"`
+	/**
+	 * `0` indicates the current record is user's message
+	 * otherwise indicates the message replies an user's message,
+	 * and the value is the id of the message
+	 */
+	ReplyTo   uint64 `gorm:"column:reply_to;default:0"`
 	IsDeleted bool   `gorm:"index;default:false;type:boolean"`
 }
 
 func (u MessageModel) TableName() string {
 	return "messages"
-}
-
-type DialogConfig struct {
-	model.ChatConfig
-	DialogTitle     string `json:"dialog_title"`
-	UseGlobalConfig bool   `json:"use_global_config"`
 }

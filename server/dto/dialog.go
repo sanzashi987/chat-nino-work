@@ -1,7 +1,5 @@
 package dto
 
-
-
 type RequestDialogsDto struct {
 	RequestPagingDto
 	// RequestMessageDto
@@ -18,4 +16,10 @@ type ResponseDialogs struct {
 type ResponseUserInfoDto struct {
 	UpdateUserConfigDto
 	Dialogs ResponseDialogs `json:"dialogs"`
+}
+
+type DialogConfig struct {
+	Config          string `json:"config"`
+	DialogTitle     string `json:"dialog_title"`
+	UseGlobalConfig bool   `json:"use_global_config"`
 }

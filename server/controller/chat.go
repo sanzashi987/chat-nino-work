@@ -3,9 +3,9 @@ package controller
 import (
 	"net/http"
 
-	"github.com/cza14h/chat-nino-work/consts"
+	"github.com/cza14h/chat-nino-work/dto"
+	"github.com/cza14h/chat-nino-work/services"
 	"github.com/gin-gonic/gin"
-	openai "github.com/sashabaranov/go-openai"
 )
 
 type ChatController struct {
@@ -24,28 +24,12 @@ func (c *ChatController) Index(ctx *gin.Context) {
 }
 
 func (c *ChatController) Completion(ctx *gin.Context) {
-	var request openai.ChatCompletionRequest
-	ctx.BindJSON(&request)
+	var requestBody dto.ChatMessageDto
+	ctx.BindJSON(&requestBody)
 
-	// force not stream
-
-	request.Stream = false
-
-	gptConfig := openai.DefaultConfig("")
-
-	client := openai.NewClientWithConfig(gptConfig)
-
-	if ok := consts.SupportModels[request.Model]; ok {
-		response, err := client.CreateChatCompletion(ctx, request)
-		if err != nil {
-			c.AbortJson(ctx, http.StatusBadRequest, err.Error(), nil)
-			return
-		}
-		c.RespondJson(ctx, http.StatusOK, "", gin.H{
-			"response": response,
-		})
-	} else {
-		c.AbortJson(ctx, http.StatusBadRequest, "unsupported model", nil)
-		return
+	res, err := services.ReplyFromGPT(&requestBody)
+	if err != nil {
+		c.AbortJson(ctx, http.StatusBadRequest, err.Error(), nil)
 	}
+
 }

@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/cza14h/chat-nino-work/config"
 	"gorm.io/gorm"
 )
 
@@ -31,12 +32,11 @@ func SetupDB(db *gorm.DB) {
 	DBRef = db
 }
 
-type ChatConfig struct {
-	Model             string  `json:"model"`
-	Temperature       float32 `json:"temperature"`
-	MaxTokens         int     `json:"max_tokens"`
-	PresencePenalty   float32 `json:"presence_penalty"`
-	HistoryCount      int     `json:"history_count"`
-	CompressThreshold int     `json:"compress_threshold"`
-	Memory            bool    `json:"memory"`
+func CreateBaseModel() (baseModel *BaseModel) {
+	baseModel = &BaseModel{
+		ID:        uint64(config.SnowflakeNode.Generate()),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	return
 }
