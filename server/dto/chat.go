@@ -11,6 +11,16 @@ type ChatMessageDto struct {
 	DialogId uint64                         `json:"dialog_id" binding:"required"`
 }
 
+type RequestReChatMessageDto struct {
+	ChatMessageDto
+	MessageId uint64 `json:"message_id" binding:"required"`
+}
+
+type ResponseChatMessageDto struct {
+	Content       string `json:"content" binding:"required"`
+	UserMessageId uint64 `json:"user_message_id"`
+}
+
 type ChatConfig struct {
 	Model             string  `json:"model"`
 	Temperature       float32 `json:"temperature"`

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 
@@ -10,7 +11,7 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-func ReplyFromGPT(chatMessageDto *dto.ChatMessageDto) (string, error) {
+func ReplyFromGPT(ctx context.Context, chatMessageDto *dto.ChatMessageDto) (string, uint64, error) {
 	var gptRequest openai.ChatCompletionRequest
 	messages := chatMessageDto.History
 	json.Unmarshal([]byte(chatMessageDto.Content), &gptRequest)
@@ -28,14 +29,16 @@ func ReplyFromGPT(chatMessageDto *dto.ChatMessageDto) (string, error) {
 	if ok := consts.SupportModels[gptRequest.Model]; ok {
 		response, err := client.CreateChatCompletion(ctx, gptRequest)
 		if err != nil {
-			return "", err
+			return "", 0, err
 		}
 
-		completion.CreateMessagePair(response.Choices[0].Message.Content, chatMessageDto.Content, chatMessageDto.DialogId)
-
-		return response.Choices[0].Message.Content, nil
+		userMessageId, _, err := completion.CreateMessagePair(response.Choices[0].Message.Content, chatMessageDto.Content, chatMessageDto.DialogId)
+		if err != nil {
+			return "", 0, err
+		}
+		return response.Choices[0].Message.Content, userMessageId, nil
 	}
 
-	return "", errors.New("not supported model")
+	return "", 0, errors.New("not supported model")
 
 }

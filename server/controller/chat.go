@@ -23,13 +23,24 @@ func (c *ChatController) Index(ctx *gin.Context) {
 
 }
 
-func (c *ChatController) Completion(ctx *gin.Context) {
+func (c *ChatController) Chat(ctx *gin.Context) {
 	var requestBody dto.ChatMessageDto
 	ctx.BindJSON(&requestBody)
 
-	res, err := services.ReplyFromGPT(&requestBody)
+	res, messageId, err := services.ReplyFromGPT(ctx, &requestBody)
 	if err != nil {
 		c.AbortJson(ctx, http.StatusBadRequest, err.Error(), nil)
 	}
+
+	c.RespondJson(ctx, http.StatusOK, "", dto.ResponseChatMessageDto{
+		Content:       res,
+		UserMessageId: messageId,
+	})
+
+}
+
+func (c *ChatController) ReChat(ctx *gin.Context) {
+	var requestBody dto.RequestReChatMessageDto
+	ctx.BindJSON(&requestBody)
 
 }
